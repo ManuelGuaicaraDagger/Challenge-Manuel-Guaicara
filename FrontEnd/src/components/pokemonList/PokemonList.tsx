@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { BattleResult, Pokemon } from '../../helpers/interfaces/types';
-import SelectedPokemonDetail from '../selectedPokemon/selectedPokemon';
+import { IBattleResult, IPokemon } from '../../helpers/interfaces/types';
+import PokemonItem from './PokemonItem';
+import SelectedPokemonActions from './SelectedPokemonActions';
+import BattleResult from '../battleResult/BattleResult';
+import { Button, Grid, Box, Typography } from '@mui/material';
 
 const PokemonList: React.FC = (): React.ReactElement => {
-  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  const [pokemons, setPokemons] = useState<IPokemon[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
-  const [opponentPokemon, setOpponentPokemon] = useState<Pokemon | null>(null);
-  const [battleResult, setBattleResult] = useState<BattleResult | null>(null); // Estado para almacenar el resultado de la batalla
+  const [selectedPokemon, setSelectedPokemon] = useState<IPokemon | null>(null);
+  const [opponentPokemon, setOpponentPokemon] = useState<IPokemon | null>(null);
+  const [battleResult, setBattleResult] = useState<IBattleResult | null>(null);
 
   useEffect(() => {
     const fetchPokemons = async () => {
@@ -26,15 +29,15 @@ const PokemonList: React.FC = (): React.ReactElement => {
     fetchPokemons();
   }, []);
 
-  const handleImageClick = (pokemon: Pokemon) => {
+  const handleImageClick = (pokemon: IPokemon) => {
     setSelectedPokemon(pokemon);
-    setOpponentPokemon(null);  
-    setBattleResult(null); // Limpiar resultado de la batalla al seleccionar un nuevo pokemon
+    setOpponentPokemon(null);
+    setBattleResult(null);
   };
 
   const handleStartBattleClick = () => {
     if (selectedPokemon) {
-      let randomPokemon: Pokemon | null = null;
+      let randomPokemon: IPokemon | null = null;
       while (!randomPokemon || randomPokemon.id === selectedPokemon.id) {
         const randomIndex = Math.floor(Math.random() * pokemons.length);
         randomPokemon = pokemons[randomIndex];
@@ -48,7 +51,7 @@ const PokemonList: React.FC = (): React.ReactElement => {
 
       axios.post('http://localhost:3000/battles', battleData)
         .then(response => {
-          setBattleResult(response.data); // Almacenar el resultado de la batalla
+          setBattleResult(response.data);
           console.log('Battle started:', response.data);
         })
         .catch(error => {
@@ -61,37 +64,58 @@ const PokemonList: React.FC = (): React.ReactElement => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div>
-      <div>
+    <main>
+      <Typography align='center' variant='h4'>Select your Pokemon</Typography>
+      <Grid container direction="row" justifyContent="center" alignItems="center" spacing={2}>
         {pokemons.map(pokemon => (
-          <div key={pokemon.id}>
-            <img 
-              src={pokemon.imageUrl} 
-              alt={pokemon.name} 
-              onClick={() => handleImageClick(pokemon)} 
-              style={{ cursor: 'pointer' }}
-            />
-          </div>
+          <PokemonItem 
+            key={pokemon.id} 
+            pokemon={pokemon} 
+            onImageClick={handleImageClick} 
+          />
         ))}
-      </div>
-      {selectedPokemon && (
-        <div>
-          <SelectedPokemonDetail pokemon={selectedPokemon} />
-          <button onClick={handleStartBattleClick}>Start Battle</button>
-        </div>
-      )}
-      {opponentPokemon && (
-        <SelectedPokemonDetail pokemon={opponentPokemon} />
-      )}
-      {battleResult && (
-        <div>
-          <p>Winner: {battleResult.winnerName}</p>
-          {/* Aquí puedes mostrar más detalles del resultado si es necesario */}
-        </div>
-      )}
-    </div>
+      </Grid>
+      <Grid container justifyContent="center">
+        <Box minHeight="100px" minWidth="200px" display="flex" justifyContent="center" alignItems="center">
+          {battleResult ? (
+            <BattleResult battleResult={battleResult} />
+          ) : (
+            <Box minHeight="100px" minWidth="200px"></Box>
+          )}
+        </Box>
+      </Grid>
+      <Grid container direction="row" justifyContent="center" alignItems="center" spacing={2}>
+        <Box minHeight="100px" minWidth="200px" display="flex" justifyContent="center" alignItems="center">
+          {selectedPokemon ? (
+            <SelectedPokemonActions selectedPokemon={selectedPokemon} />
+          ) : (
+            <Box minHeight="100px" minWidth="200px"></Box>
+          )}
+        </Box>
+        <Box minHeight="50px" minWidth="200px" display="flex" justifyContent="center" alignItems="center">
+          {selectedPokemon ? (
+            <Button 
+              onClick={handleStartBattleClick} 
+              className="start-battle-button"
+              variant="contained"
+              color="success"
+            >
+              Start Battle
+            </Button>
+          ) : (
+            <Box minHeight="50px" minWidth="200px"></Box>
+          )}
+        </Box>
+        <Box minHeight="100px" minWidth="200px" display="flex" justifyContent="center" alignItems="center">
+          {opponentPokemon ? (
+            <SelectedPokemonActions selectedPokemon={opponentPokemon} />
+          ) : (
+            <Box minHeight="100px" minWidth="200px"></Box>
+          )}
+        </Box>
+      </Grid>
+    </main>
   );
 }
 
 export default PokemonList;
-

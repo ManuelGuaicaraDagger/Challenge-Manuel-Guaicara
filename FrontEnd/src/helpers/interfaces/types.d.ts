@@ -1,4 +1,4 @@
-export interface Pokemon {
+export interface IPokemon {
     id: string;
     name: string;
     attack: number;
@@ -8,11 +8,11 @@ export interface Pokemon {
     imageUrl: string
   }
 
-export interface SelectedPokemonDetailProps {
+export interface ISelectedPokemonDetailProps {
     pokemon: Pokemon;
   }
 
-export interface BattleResult {
+export interface IBattleResult {
   winnerName: string;
   loserName: string;
   battleLog: string;
