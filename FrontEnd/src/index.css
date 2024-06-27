@@ -37,6 +37,10 @@ body {
   font-family: sans-serif;
   background-color: #fafafa;
   color: black;
+  background-image: url("./assets/images/bg.jpeg");
+  background-repeat: repeat;
+  background-position: top left;
+  background-size: auto;
 }
 
 p,

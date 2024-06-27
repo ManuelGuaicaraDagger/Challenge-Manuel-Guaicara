@@ -5,6 +5,7 @@ import PokemonItem from './PokemonItem';
 import SelectedPokemonActions from './SelectedPokemonActions';
 import BattleResult from '../battleResult/BattleResult';
 import { Button, Grid, Box, Typography } from '@mui/material';
+import WaitingCard from './WaitingCard';
 
 const PokemonList: React.FC = (): React.ReactElement => {
   const [pokemons, setPokemons] = useState<IPokemon[]>([]);
@@ -35,28 +36,38 @@ const PokemonList: React.FC = (): React.ReactElement => {
     setBattleResult(null);
   };
 
+  const animateOpponentPokemon = async () => {
+    for (const pokemon of pokemons) {
+      setOpponentPokemon(pokemon);
+      await new Promise(resolve => setTimeout(resolve, 200)); 
+    }
+    setOpponentPokemon(null); 
+  };
+
   const handleStartBattleClick = () => {
     if (selectedPokemon) {
-      let randomPokemon: IPokemon | null = null;
-      while (!randomPokemon || randomPokemon.id === selectedPokemon.id) {
-        const randomIndex = Math.floor(Math.random() * pokemons.length);
-        randomPokemon = pokemons[randomIndex];
-      }
-      setOpponentPokemon(randomPokemon);
+      animateOpponentPokemon().then(() => {
+        let randomPokemon: IPokemon | null = null;
+        while (!randomPokemon || randomPokemon.id === selectedPokemon.id) {
+          const randomIndex = Math.floor(Math.random() * pokemons.length);
+          randomPokemon = pokemons[randomIndex];
+        }
+        setOpponentPokemon(randomPokemon);
 
-      const battleData = {
-        selectedPokemonId: selectedPokemon.id,
-        opponentPokemonId: randomPokemon.id,
-      };
+        const battleData = {
+          selectedPokemonId: selectedPokemon.id,
+          opponentPokemonId: randomPokemon.id,
+        };
 
-      axios.post('http://localhost:3000/battles', battleData)
-        .then(response => {
-          setBattleResult(response.data);
-          console.log('Battle started:', response.data);
-        })
-        .catch(error => {
-          console.error('Error starting battle:', error);
-        });
+        axios.post('http://localhost:3000/battles', battleData)
+          .then(response => {
+            setBattleResult(response.data);
+            console.log('Battle started:', response.data);
+          })
+          .catch(error => {
+            console.error('Error starting battle:', error);
+          });
+      });
     }
   };
 
@@ -65,7 +76,7 @@ const PokemonList: React.FC = (): React.ReactElement => {
 
   return (
     <main>
-      <Typography align='center' variant='h4'>Select your Pokemon</Typography>
+      <Typography align='center' variant='h4' color="#045DA0" fontWeight="bold">Select your Pokemon</Typography>
       <Grid container direction="row" justifyContent="center" alignItems="center" spacing={2}>
         {pokemons.map(pokemon => (
           <PokemonItem 
@@ -85,11 +96,11 @@ const PokemonList: React.FC = (): React.ReactElement => {
         </Box>
       </Grid>
       <Grid container direction="row" justifyContent="center" alignItems="center" spacing={2}>
-        <Box minHeight="100px" minWidth="200px" display="flex" justifyContent="center" alignItems="center">
+        <Box minHeight="100px" minWidth="300px" display="flex" justifyContent="center" alignItems="center">
           {selectedPokemon ? (
             <SelectedPokemonActions selectedPokemon={selectedPokemon} />
           ) : (
-            <Box minHeight="100px" minWidth="200px"></Box>
+            <WaitingCard />
           )}
         </Box>
         <Box minHeight="50px" minWidth="200px" display="flex" justifyContent="center" alignItems="center">
@@ -106,11 +117,11 @@ const PokemonList: React.FC = (): React.ReactElement => {
             <Box minHeight="50px" minWidth="200px"></Box>
           )}
         </Box>
-        <Box minHeight="100px" minWidth="200px" display="flex" justifyContent="center" alignItems="center">
+        <Box minHeight="100px" minWidth="300px" display="flex" justifyContent="center" alignItems="center">
           {opponentPokemon ? (
             <SelectedPokemonActions selectedPokemon={opponentPokemon} />
           ) : (
-            <Box minHeight="100px" minWidth="200px"></Box>
+            <WaitingCard />
           )}
         </Box>
       </Grid>

@@ -1,10 +1,7 @@
 import React from 'react';
-import { IPokemon } from '../../helpers/interfaces/types';
 import { Grid, Typography, styled } from '@mui/material';
+import unknow from '../../assets/images/unknow.png'
 
-interface SelectedPokemonActionsProps {
-  selectedPokemon: IPokemon;
-}
 
 const Img = styled('img')({
   width: '200px',
@@ -12,6 +9,7 @@ const Img = styled('img')({
   cursor: 'pointer',
   display: 'block', 
   margin: '0 auto', 
+  padding: "10px"
 });
 
 const StyledGrid = styled(Grid)<{ background: string }>((props) => ({
@@ -40,42 +38,22 @@ const ProgressValue = styled('div')<{ value: number }>((props) => ({
   borderRadius: '5px',
 }));
 
-const SelectedPokemonActions: React.FC<SelectedPokemonActionsProps> = ({ selectedPokemon }) => {
-  let background = '';
+const WaitingCard: React.FC = () => {
 
-  switch (selectedPokemon.name) {
-    case 'Pikachu':
-      background = 'rgb(227,221,0)';
-      break;
-    case 'Charmander':
-      background = 'rgb(252,107,34)';
-      break;
-    case 'Squirtle':
-      background = 'rgb(34,252,250)';
-      break;
-    case 'Bulbasur':
-      background = 'rgb(55,166,40)';
-      break;
-    case 'Eevee':
-      background = 'rgb(113,113,113)';
-      break;
-    default:
-      background = '';
-  }
 
   return (
-    <StyledGrid container justifyContent="center" alignItems="center" background={background} boxShadow={5}>
+    <StyledGrid container justifyContent="center" alignItems="center" background={"rgb(113,113,113)"} boxShadow={5}>
       <Grid item xs={12}>
-        <Img src={selectedPokemon.imageUrl} alt={selectedPokemon.name} />
+        <Img src={unknow} alt="Unknow" />
         <Typography align='left' variant='h5'>
-          {selectedPokemon.name}
+          ?
         </Typography>
         <ProgressBarContainer>
           <Typography align='left'>
             HP
           </Typography>
           <ProgressBar>
-            <ProgressValue value={selectedPokemon.hp} />
+            <ProgressValue value={0} />
           </ProgressBar>
         </ProgressBarContainer>
         <ProgressBarContainer>
@@ -83,7 +61,7 @@ const SelectedPokemonActions: React.FC<SelectedPokemonActionsProps> = ({ selecte
             Attack
           </Typography>
           <ProgressBar>
-            <ProgressValue value={selectedPokemon.attack} />
+            <ProgressValue value={0} />
           </ProgressBar>
         </ProgressBarContainer>
         <ProgressBarContainer>
@@ -91,7 +69,7 @@ const SelectedPokemonActions: React.FC<SelectedPokemonActionsProps> = ({ selecte
             Defense
           </Typography>
           <ProgressBar>
-            <ProgressValue value={selectedPokemon.defense} />
+            <ProgressValue value={0} />
           </ProgressBar>
         </ProgressBarContainer>
         <ProgressBarContainer>
@@ -99,7 +77,7 @@ const SelectedPokemonActions: React.FC<SelectedPokemonActionsProps> = ({ selecte
             Speed
           </Typography>
           <ProgressBar>
-            <ProgressValue value={selectedPokemon.speed} />
+            <ProgressValue value={0} />
           </ProgressBar>
         </ProgressBarContainer>
       </Grid>
@@ -107,4 +85,4 @@ const SelectedPokemonActions: React.FC<SelectedPokemonActionsProps> = ({ selecte
   );
 };
 
-export default SelectedPokemonActions;
+export default WaitingCard;

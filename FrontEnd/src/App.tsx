@@ -1,14 +1,18 @@
-import { Typography } from "@mui/material"
 import PokemonList from "./components/pokemonList/PokemonList"
+import title from "./assets/images/Battle-of-Pokemon-27-6-2024 (1).png"
+import { Grid } from "@mui/material"
+import Footer from "./components/footer/Footer"
 
 
 function App() {
 
   return (
     <>
-    <Typography variant="h1" align="center">Battle of Pokemon</Typography>
+    <Grid container justifyContent="center">
+    <img src={title} alt="Battle of Pokemon" />
+    </Grid>
      <PokemonList />
-     {/* <PreviousBattles /> */}
+     <Footer />
     </>
   )
 }
