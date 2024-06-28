@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Button, Grid, Box, Typography, styled } from '@mui/material';
 import { IBattleResult, IPokemon } from '../../helpers/interfaces/types';
 import PokemonItem from './PokemonItem';
 import SelectedPokemonActions from './SelectedPokemonActions';
 import BattleResult from '../battleResult/BattleResult';
-import { Button, Grid, Box, Typography } from '@mui/material';
 import WaitingCard from './WaitingCard';
 
 const PokemonList: React.FC = (): React.ReactElement => {
@@ -46,6 +46,7 @@ const PokemonList: React.FC = (): React.ReactElement => {
 
   const handleStartBattleClick = () => {
     if (selectedPokemon) {
+      setBattleResult(null);
       animateOpponentPokemon().then(() => {
         let randomPokemon: IPokemon | null = null;
         while (!randomPokemon || randomPokemon.id === selectedPokemon.id) {
@@ -74,9 +75,38 @@ const PokemonList: React.FC = (): React.ReactElement => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
+  const ResponsiveBox = styled(Box)(({ theme }) => ({
+    minHeight: '100px',
+    width: '300px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    [theme.breakpoints.down('lg')]: {
+      width: '210px', 
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '147px', 
+    },
+  }));
+
+  const ResponsiveGridContainer = styled(Grid)(({ theme }) => ({
+    flexDirection: 'row',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column', 
+    },
+  }));
+
   return (
     <main>
-      <Typography align='center' variant='h4' color="#045DA0" fontWeight="bold">Select your Pokemon</Typography>
+      <Typography align='center' variant='h4' color="#045DA0" fontWeight="bold" sx={{
+    fontSize: '2.4rem', 
+    '@media (max-width: 850px)': {
+      fontSize: '1.44rem', 
+    },
+    '@media (max-width: 520px)': {
+      fontSize: '1rem', 
+    },
+  }}>Select your Pokemon</Typography>
       <Grid container direction="row" justifyContent="center" alignItems="center" spacing={2}>
         {pokemons.map(pokemon => (
           <PokemonItem 
@@ -87,22 +117,22 @@ const PokemonList: React.FC = (): React.ReactElement => {
         ))}
       </Grid>
       <Grid container justifyContent="center">
-        <Box minHeight="100px" minWidth="200px" display="flex" justifyContent="center" alignItems="center">
+        <Box minHeight="100px" minWidth="30%" display="flex" justifyContent="center" alignItems="center">
           {battleResult ? (
             <BattleResult battleResult={battleResult} />
           ) : (
-            <Box minHeight="100px" minWidth="200px"></Box>
+            <Box minHeight="100px" minWidth="30%"></Box>
           )}
         </Box>
       </Grid>
-      <Grid container direction="row" justifyContent="center" alignItems="center" spacing={2}>
-        <Box minHeight="100px" minWidth="300px" display="flex" justifyContent="center" alignItems="center">
+      <ResponsiveGridContainer container direction="row" justifyContent="center" alignItems="center" spacing={2}>
+        <ResponsiveBox minHeight="100px" width="300px" display="flex" justifyContent="center" alignItems="center">
           {selectedPokemon ? (
             <SelectedPokemonActions selectedPokemon={selectedPokemon} />
           ) : (
             <WaitingCard />
           )}
-        </Box>
+        </ResponsiveBox>
         <Box minHeight="50px" minWidth="200px" display="flex" justifyContent="center" alignItems="center">
           {selectedPokemon ? (
             <Button 
@@ -117,14 +147,14 @@ const PokemonList: React.FC = (): React.ReactElement => {
             <Box minHeight="50px" minWidth="200px"></Box>
           )}
         </Box>
-        <Box minHeight="100px" minWidth="300px" display="flex" justifyContent="center" alignItems="center">
+        <ResponsiveBox minHeight="100px" width="300px" display="flex" justifyContent="center" alignItems="center">
           {opponentPokemon ? (
             <SelectedPokemonActions selectedPokemon={opponentPokemon} />
           ) : (
             <WaitingCard />
           )}
-        </Box>
-      </Grid>
+        </ResponsiveBox>
+      </ResponsiveGridContainer>
     </main>
   );
 }

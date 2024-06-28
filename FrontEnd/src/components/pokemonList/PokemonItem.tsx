@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { IPokemon } from '../../helpers/interfaces/types';
 import { Grid, Box } from '@mui/material';
+import { IPokemon } from '../../helpers/interfaces/types';
 import pikachu from '../../assets/images/Pikachu.png';
 import charmander from '../../assets/images/Charmander.png';
 import squirtle from '../../assets/images/Squirtle.png';
@@ -21,7 +21,7 @@ interface PokemonItemProps {
   onImageClick: (pokemon: IPokemon) => void;
 }
 
-const Img = styled('img')({
+const Img = styled('img')(({ theme }) => ({
   width: '150px',
   height: '150px',
   cursor: 'pointer',
@@ -29,14 +29,22 @@ const Img = styled('img')({
   zIndex: 1,
   display: 'block',
   margin: '0 auto',
-  marginBottom: '-20px', // Adjust the overlap
-  transition: 'transform 0.3s', // Smooth transition for the hover effect
+  marginBottom: '-20px',
+  transition: 'transform 0.3s',
   '&:hover': {
-    transform: 'scale(1.1)', // Scale the image up a bit
+    transform: 'scale(1.1)',
   },
-});
+  [theme.breakpoints.down(1250)]: {
+    width: '120px',
+    height: '120px',
+  },
+  [theme.breakpoints.down(1050)]: {
+    width: '96px', 
+    height: '96px',
+  },
+}));
 
-const NameImage = styled('img')({
+const NameImage = styled('img')(({ theme }) => ({
   width: '200px',
   height: 'auto',
   position: 'relative',
@@ -44,7 +52,13 @@ const NameImage = styled('img')({
   display: 'block',
   margin: '0 auto',
   cursor: 'pointer',
-});
+  [theme.breakpoints.down(1250)]: {
+    width: '160px', 
+  },
+  [theme.breakpoints.down(1050)]: {
+    width: '128px', 
+  },
+}));
 
 const PokemonItem: React.FC<PokemonItemProps> = ({ pokemon, onImageClick }) => {
   const backgroundImageUrl = obj[pokemon.name as keyof typeof obj] || '';
