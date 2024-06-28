@@ -5,7 +5,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 const Footer = () => {
     return (
-        <Grid container justifyContent="center" flexDirection="column" alignItems="center" marginTop={10}>
+        <Grid container justifyContent="center" flexDirection="column" alignItems="center" marginTop={10} color="#045DA0">
         <Grid item>
             <Typography>Copyright © Manuel Guaicara</Typography>
         </Grid>
