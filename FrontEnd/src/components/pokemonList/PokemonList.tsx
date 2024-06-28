@@ -63,7 +63,6 @@ const PokemonList: React.FC = (): React.ReactElement => {
         axios.post('http://localhost:3000/battles', battleData)
           .then(response => {
             setBattleResult(response.data);
-            console.log('Battle started:', response.data);
           })
           .catch(error => {
             console.error('Error starting battle:', error);

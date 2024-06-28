@@ -35,7 +35,7 @@ const BattleResult: React.FC<BattleResultProps> = ({ battleResult }) => {
         animation: `${slideUp} 0.5s ease-in-out`,
       }}
     >
-      <Typography variant='h5'>{battleResult.winnerName} wins!</Typography>
+      <Typography variant='h5' paddingX={2}>{battleResult.winnerName} wins!</Typography>
     </Grid>
   );
 };
